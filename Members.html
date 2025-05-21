@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="./styles.css" />
+  <title>Members</title>
+</head>
+<body>
+
+  <div class="sidebar regular">
+    <img src="./images/logo.png" alt="Company Logo" class="logo" />
+
+    <a href="index.html">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
+        <path d="M8 0L0 6h2v10h4V10h4v6h4V6h2L8 0z" />
+      </svg>
+      Dashboard
+    </a>
+
+    <a class="active" href="members.html">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z" />
+        <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+      </svg>
+      Members
+    </a>
+
+    <a href="staff.html">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
+        <path d="M6 2a2 2 0 0 1 4 0v1H6V2zM4 5V4a4 4 0 1 1 8 0v1h1a1 1 0 0 1 1 1v3H2V6a1 1 0 0 1 1-1h1z" />
+        <path d="M2 9h12v5H2V9z" />
+      </svg>
+      Staff
+    </a>
+
+    <a href="analytics.html">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
+        <path d="M0 0h1v15h15v1H0V0z" />
+        <path d="M2 13h2v-5H2v5zm3 0h2V6H5v7zm3 0h2V3H8v10zm3 0h2V9h-2v4z" />
+      </svg>
+      Analytics
+    </a>
+  </div>
+
+  <div class="content">
+    <div class="header">
+      <h4 class="heading">Members Overview</h4>
+      <h5 class="subheading">Welcome back, Admin</h5>
+
+      <!-- Stats Section -->
+      <div class="flexContainerBig subheading">
+        <div class="quickcontainer two-column">
+          <div class="text-column">
+            <h5>Total Members</h5>
+            <h2 class="heading">1,234</h2>
+          </div>
+          <div class="icon-column">
+            <div class="icon-circle">
+              <i class="fas fa-users"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="quickcontainer two-column">
+          <div class="text-column">
+            <h5>Active Members</h5>
+            <h2 class="heading">25</h2>
+          </div>
+          <div class="icon-column">
+            <div class="icon-circle">
+              <i class="fas fa-user-check"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="quickcontainer two-column">
+          <div class="text-column">
+            <h5>New This Month</h5>
+            <h2 class="heading">24,500</h2>
+          </div>
+          <div class="icon-column">
+            <div class="icon-circle">
+              <i class="fas fa-user-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="quickcontainer two-column">
+          <div class="text-column">
+            <h5>Expiring Soon</h5>
+            <h2 class="heading">25</h2>
+          </div>
+          <div class="icon-column">
+            <div class="icon-circle">
+              <i class="fas fa-user-clock"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Members Section -->
+    <!-- Members Section -->
+<div class="flexContainerBig">
+  <div class="quickcontainer recent-members">
+
+    <!-- Row 1: Search and Add Member -->
+    <div class="filter-row" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px;">
+      <input type="text" id="search-members" placeholder="Search members..." class="search-bar" />
+      <button id="add-member-btn" class="add-member-btn">+ Add Member</button>
+    </div>
+
+    <!-- Row 2: Table -->
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th><button class="sort-btn" data-column="0">Member</button></th>
+          <th><button class="sort-btn" data-column="1">Plan</button></th>
+          <th><button class="sort-btn" data-column="2">Start Date</button></th>
+          <th><button class="sort-btn" data-column="3">End Date</button></th>
+          <th><button class="sort-btn" data-column="4">Status</button></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="members-list">
+        <tr>
+          <td>John Doe</td>
+          <td>Gold</td>
+          <td>May 1, 2025</td>
+          <td>May 1, 2026</td>
+          <td class="status Active">Active</td>
+          <td>
+           <button class="action-btn edit" title="Edit">
+             <i class="fas fa-pen"></i>
+           </button>
+           <button class="action-btn delete" title="Delete">
+             <i class="fas fa-trash"></i>
+           </button>
+          </td>
+        </tr>
+        <tr>
+          <td>Jane Smith</td>
+          <td>Silver</td>
+          <td>Apr 28, 2025</td>
+          <td>Apr 28, 2026</td>
+          <td class="status Inactive">Inactive</td>
+          <td>
+           <button class="action-btn edit" title="Edit">
+             <i class="fas fa-pen"></i>
+           </button>
+           <button class="action-btn delete" title="Delete">
+             <i class="fas fa-trash"></i>
+           </button>
+          </td>
+        </tr>
+        <!-- Add more members as needed -->
+      </tbody>
+    </table>
+
+    <!-- Row 3: Pagination -->
+    <div class="pagination">
+      <button class="page-btn" id="prev-page">&laquo; Previous</button>
+      <span id="page-number">Page 1</span>
+      <button class="page-btn" id="next-page">Next &raquo;</button>
+    </div>
+
+  </div>
+</div>
+
+
+    </div>
+  </div>
+
+  <script src="members.js"></script>
+</body>
+</html>
