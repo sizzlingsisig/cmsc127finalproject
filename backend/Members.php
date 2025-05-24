@@ -128,12 +128,17 @@
           <th><button class="sort-btn" data-column="2">Start Date</button></th>
           <th><button class="sort-btn" data-column="3">End Date</button></th>
           <th><button class="sort-btn" data-column="4">Status</button></th>
+          <th><button class="sort-btn" data-column="5">Contact Info</button></th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody id="members-list">
         <?php 
-        include 'displayMembers.php';
+        if(isset($_POST["MemberID"])) {
+            include 'edit_member.php';
+        } else {
+            include 'displayMembers.php';
+        }
         ?>
         
         <!-- Add more members as needed -->
