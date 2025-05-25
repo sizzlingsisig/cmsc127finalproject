@@ -10,7 +10,6 @@
       background-color: #f8f9fa;
     }
 
-    /* Sidebar */
     .sidebar {
       position: fixed;
       top: 0;
@@ -46,7 +45,6 @@
       background-color: #5c3d0a;
     }
 
-    /* Header */
     .header {
       margin-left: 220px;
       height: 60px;
@@ -58,13 +56,11 @@
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
     }
 
-    /* Main Content */
     .main-content {
       margin-left: 220px;
       padding: 30px;
     }
 
-    /* Form Styles */
     .form-container {
       background-color: white;
       padding: 20px;
@@ -78,7 +74,7 @@
       margin-bottom: 6px;
     }
 
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -123,54 +119,38 @@
   </div>
 
   <!-- Main Content -->
-  <div class="main-content">
-    <div class="form-container">
-      <form>
-        <!-- Membership Type -->
-        <label>Membership Type</label>
-        <select required>
-          <option disabled selected>Select a membership type</option>
-          <option>Walk-in</option>
-          <option>Weekly</option>
-          <option>Monthly</option>
-          <option>Yearly</option>
-          <option>Renewal</option>
-        </select>
+  <!-- ... HEAD and SIDEBAR remain unchanged ... -->
 
-        <!-- Name -->
-        <label>Full Name</label>
-        <input type="text" placeholder="Enter full name" required />
+<!-- Main Content -->
+<div class="main-content">
+  <div class="form-container">
+    <form method="POST" action="add_member.php">
+      <!-- Name -->
+      <label for="member_name">Full Name</label>
+      <input type="text" id="member_name" name="member_name" placeholder="Enter full name" required />
 
-        <!-- Address -->
-        <label>Address</label>
-        <input type="text" placeholder="Enter address" required />
+      <!-- Contact -->
+      <label for="contact_info">Contact Information</label>
+      <input type="text" id="contact_info" name="contact_info" placeholder="Enter contact number or email" required />
 
-        <!-- Contact -->
-        <label>Contact Number</label>
-        <input type="tel" placeholder="Enter contact number" required />
+      <!-- Membership Type Dropdown -->
+      <label for="membership_type">Membership Type</label>
+      <select id="membership_type" name="membership_type" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px;">
+        <option value="" disabled selected>Select membership type</option>
+        <option value="walk-in">Walk-in</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="renewal">Renewal</option>
+      </select>
 
-        <!-- Email -->
-        <label>Email Address</label>
-        <input type="email" placeholder="Enter email" required />
-
-        <!-- DOB -->
-        <label>Date of Birth</label>
-        <input type="date" required />
-
-        <!-- Gender -->
-        <label>Gender</label>
-        <select required>
-          <option disabled selected>Select gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Non-binary</option>
-        </select>
-
-        <!-- Submit -->
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+      <!-- Submit -->
+      <button type="submit">Submit</button>
+    </form>
   </div>
+</div>
+
+<!-- ... FOOTER or JS if any ... -->
+
 
 </body>
 </html>

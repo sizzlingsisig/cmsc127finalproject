@@ -121,7 +121,7 @@
             <tbody>
               <!-- Replace with php -->
             <?php
-                include 'members.php';
+                include 'Members.php';
             ?>
               <tr>
                 <td>Anthony Davis</td>
