@@ -367,6 +367,11 @@ body {
   color: white;
 }
 
+.action-btn.save {
+  background-color: #80e388;
+  color: white;
+}
+
 .members-table th button.sort-btn {
   background: none;
   border: none;

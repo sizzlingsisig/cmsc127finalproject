@@ -38,13 +38,21 @@ if ($member_result->num_rows > 0) {
           <td>" . $subscription["start_date"] . "</td>
           <td>" . $subscription["end_date"] . "</td>
           <td class='status Active'>" . $row["membership_status"] . "</td>
-          <td>
-           <button class='action-btn edit' title='Edit'>
-             <i class='fas fa-pen'></i>
-           </button>
-           <button class='action-btn delete' title='Delete'>
-             <i class='fas fa-trash'></i>
-           </button>
+          <td>" . $row["contact_info"] . "</td>
+          <td>" .
+            "<form action='Members.php' method='post' onsubmit='return confirmDelete()'>".
+                "<input type='text' style='display:none;' name='MemberID' value='".$row["member_ID"]."'>".
+                "<button class='action-btn delete' title='Delete'>
+                  <i class='fas fa-trash'></i>
+                </button>".
+            "</form>".
+            "<form action='Members.php' method='post'>".
+                "<input type='text' style='display:none;' name='MemberID' value='".$row["member_ID"]."'>".
+                "<button class='action-btn edit' title='Edit'>
+                  <i class='fas fa-pen'></i>
+                </button>".
+            "</form>".
+          "
           </td>
         </tr>
         ";
