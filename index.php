@@ -144,26 +144,48 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Replace with php -->
-              <tr>
-                <td>LeBron James</td>
-                <td>Premium</td>
-                <td class="status Active">Active</td>
-                <td>2025-05-21</td>
-              </tr>
-              <tr>
-                <td>Anthony Davis</td>
-                <td>Standard</td>
-                <td class="status Active">Active</td>
-                <td>2025-05-20</td>
-              </tr>
-              <tr>
-                <td>Austin Reaves</td>
-                <td>Trial</td>
-                <td class="status Inactive">Inactive</td>
-                <td>2025-05-15</td>
-              </tr>
-            </tbody>
+            <?php
+              // Database connection
+              $conn = new mysqli("localhost", "root", "", "gym");
+
+              if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+              }
+
+              // Get recent members with their last check-in
+              $sql = "
+                SELECT m.member_name, m.membership_status, mb.membership_type, MAX(a.attendance_date) AS last_checkin
+                FROM members m
+                LEFT JOIN subscribes s ON m.member_ID = s.member_ID
+                LEFT JOIN membership mb ON s.membership_ID = mb.membership_ID
+                LEFT JOIN attendance a ON m.member_ID = a.member_ID
+                GROUP BY m.member_ID
+                ORDER BY last_checkin DESC
+                LIMIT 5;
+              ";
+
+              $result = $conn->query($sql);
+
+              if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                  $statusClass = ucfirst($row['membership_status']);
+                  $lastCheckin = $row['last_checkin'] ? $row['last_checkin'] : 'N/A';
+                  $membership = $row['membership_type'] ?? 'N/A';
+
+                  echo "<tr>
+                          <td>{$row['member_name']}</td>
+                          <td>{$membership}</td>
+                          <td class='status {$statusClass}'>{$row['membership_status']}</td>
+                          <td>{$lastCheckin}</td>
+                        </tr>";
+                }
+              } else {
+                echo "<tr><td colspan='4'>No recent members found.</td></tr>";
+              }
+
+              $conn->close();
+            ?>
+          </tbody>
           </table>
         </div>
 
