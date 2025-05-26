@@ -82,7 +82,7 @@ VALUES
 INSERT INTO members (member_name, contact_info, membership_status)
 VALUES
 ('Eryl Aspera', 'EAspera@up.edu.ph', 'active'),
-('Christian Hernia', 'CHernia@up.edu.ph', 'cancelled');
+('Christian Hernia', 'CHernia@up.edu.ph', 'active');
 
 INSERT INTO membership (membership_type, price, duration)
 VALUES
