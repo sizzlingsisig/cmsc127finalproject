@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Test Add Member</title>
+</head>
+<body>
+    <h2>Add Member</h2>
+    <form action="add_member.php" method="POST">
+        <label>
+            Member Name:
+            <input type="text" name="member_name" required />
+        </label><br /><br />
+        
+        <label>
+            Contact Info:
+            <input type="text" name="contact_info" required />
+        </label><br /><br />
+        
+        <label>
+            Membership Type:
+            <select name="membership_type" required>
+                <option value="">--Select--</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+        </label><br /><br />
+        
+        <label>
+            Payment Type:
+            <select name="payment_type">
+                <option value="cash">Cash</option>
+                <option value="gcash">GCash</option>
+                <option value="bdo">BDO</option>
+            </select>
+        </label><br /><br />
+        
+        <button type="submit">Add Member</button>
+    </form>
+</body>
+</html>

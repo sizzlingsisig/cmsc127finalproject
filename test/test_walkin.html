@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Add Walk-in Visitor</title>
+</head>
+<body>
+    <h2>Test Walk-in Entry</h2>
+    <form action="add_walkin.php" method="POST">
+        <label>
+            Visitor Name:
+            <input type="text" name="visitor_name" required />
+        </label><br /><br />
+
+        <label>
+            Contact Info:
+            <input type="text" name="contact_info" />
+        </label><br /><br />
+
+        <label>
+            Visit Date:
+            <input type="date" name="visit_date" value="<?php echo date('Y-m-d'); ?>" />
+        </label><br /><br />
+
+        <label>
+            Check-in Time:
+            <input type="time" name="check_in_time" value="<?php echo date('H:i'); ?>" />
+        </label><br /><br />
+
+        <label>
+            Payment Type:
+            <select name="payment_type">
+                <option value="cash">Cash</option>
+                <option value="gcash">GCash</option>
+                <option value="bdo">BDO</option>
+            </select>
+        </label><br /><br />
+
+        <button type="submit">Submit Walk-in</button>
+    </form>
+</body>
+</html>
