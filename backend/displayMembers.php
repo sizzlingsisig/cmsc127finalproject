@@ -11,11 +11,9 @@ if ($member_result->num_rows > 0) {
                                 JOIN subscribes s ON m.membership_ID = s.membership_ID
                                 WHERE s.member_ID = " . $row["member_ID"] . ";" ;
         $subscription = $conn->query($subscription_query)->fetch_assoc(); // diri na ga problema if ang isa ka member may multiple subscriptions, karon lng ni kayohon ah pota na
-
         // var_dump($subscription);
 
         $sub_price = $subscription["price"];
-
         $total_paid = 0;
         $TP_query = "SELECT amount 
                     FROM payment
@@ -25,9 +23,7 @@ if ($member_result->num_rows > 0) {
         while($paid = $payments->fetch_assoc()){
             $total_paid = $total_paid + $paid['amount'];
         }
-
         // $paid = $conn->query("SELECT SUM(amount) FROM $payments"); //Fatal error: Uncaught Error: Object of class mysqli_result could not be converted to string in C:\xampp\htdocs\127-final-project\members.php:30 Stack trace: #0 C:\xampp\htdocs\127-final-project\index.php(32): include() #1 {main} thrown in C:\xampp\htdocs\127-final-project\members.php on line 29
-
 
         $outstanding_balance = $sub_price - $total_paid;
 
@@ -40,15 +36,17 @@ if ($member_result->num_rows > 0) {
           <td class='status Active'>" . $row["membership_status"] . "</td>
           <td>" . $row["contact_info"] . "</td>
           <td>" .
-            "<form action='Members.php' method='post' onsubmit='return confirmDelete()'>".
+            "<form action='delete_member.php' method='post' onsubmit=\"return confirm('Are you sure you want to delete this member?')\">".
                 "<input type='text' style='display:none;' name='MemberID' value='".$row["member_ID"]."'>".
-                "<button class='action-btn delete' title='Delete'>
+                "<input type='text' style='display:none;' name='action' value='delete'>".
+                "<button type='submit' class='action-btn delete' title='Delete'>
                   <i class='fas fa-trash'></i>
                 </button>".
             "</form>".
             "<form action='Members.php' method='post'>".
                 "<input type='text' style='display:none;' name='MemberID' value='".$row["member_ID"]."'>".
-                "<button class='action-btn edit' title='Edit'>
+                "<input type='text' style='display:none;' name='action' value='edit'>".
+                "<button type='submit' class='action-btn edit' title='Edit'>
                   <i class='fas fa-pen'></i>
                 </button>".
             "</form>".

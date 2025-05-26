@@ -5,7 +5,7 @@ if($_POST["Update"] == "update") {
     $member_id = $_POST['MemberID'];
     $name = $_POST['MemberName'];
     $membership_id = $_POST['MemberPlan'];
-    $contact_info = $_POST['MemberContactInfo'];
+    $contact_info = $_POST['Contact_Info'];
 
     // Update the member details in the database
     $update_query = "UPDATE members SET member_name='$name', contact_info='$contact_info' WHERE member_ID='$member_id'";

@@ -134,13 +134,12 @@
       </thead>
       <tbody id="members-list">
         <?php 
-        if(isset($_POST["MemberID"])) {
+        if(isset($_POST["MemberID"]) && $_POST["action"] == "edit") {
             include 'edit_member.php';
         } else {
             include 'displayMembers.php';
         }
         ?>
-        
         <!-- Add more members as needed -->
       </tbody>
     </table>

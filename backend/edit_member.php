@@ -12,7 +12,7 @@ if ($member_result->num_rows > 0) {
                                 WHERE s.member_ID = " . $row["member_ID"] . ";" ;
         $subscription = $conn->query($subscription_query)->fetch_assoc(); // diri na ga problema if ang isa ka member may multiple subscriptions, karon lng ni kayohon ah pota na
 
-        // var_dump($subscription);
+        //var_dump($subscription);
 
         $sub_price = $subscription["price"];
 
@@ -29,38 +29,40 @@ if ($member_result->num_rows > 0) {
         // $paid = $conn->query("SELECT SUM(amount) FROM $payments"); //Fatal error: Uncaught Error: Object of class mysqli_result could not be converted to string in C:\xampp\htdocs\127-final-project\members.php:30 Stack trace: #0 C:\xampp\htdocs\127-final-project\index.php(32): include() #1 {main} thrown in C:\xampp\htdocs\127-final-project\members.php on line 29
 
         $outstanding_balance = $sub_price - $total_paid;
-        // var_dump($_POST["MemberID"]);
+        //  var_dump($_POST["MemberID"]);
+        //  echo "<br>";
         // var_dump($row['member_ID']);
 
 
         if ($_POST["MemberID"] == $row['member_ID']) {
             echo "
             <form action='update_member.php' method='post'>
-            <tr>
-            <td><input type='text' name='MemberName' value='{$row['member_name']}'></td>
-            <td>
-                <select name='MemberPlan'>";
-                    echo "<option value='{$subscription['membership_ID']}' selected>{$subscription['membership_type']}</option>";
+                <tr>
+                    <td><input type='text' name='MemberName' value='{$row['member_name']}'></td>
+                    <td>
+                        <select name='MemberPlan'>";
+                            echo "<option value='{$subscription['membership_ID']}' selected>{$subscription['membership_type']}</option>";
 
-                    include 'allPlans.php';
+                            include 'allPlans.php';
 
-                echo "</select>
-            </td>
-            <td>{$subscription['start_date']}</td>
-            <td>{$subscription['end_date']}</td>
-            <td class='status Active'>{$row['membership_status']}</td>
-            <td><input type='text' name='Contact_Info' value='{$row['contact_info']}'></td>
-            <td>
-                <input type='hidden' name='MemberID' value='{$_POST["MemberID"]}'>
-                <button class='action-btn save' title='Save' type='submit' name='Update' value='update'>
-                    <i class='fas fa-save'></i>
-                </button>
+                        echo "</select>
+                    </td>
+                    <td>{$subscription['start_date']}</td>
+                    <td>{$subscription['end_date']}</td>
+                    <script>console.log('membership_STATUS: " . $row['membership_status'] . "');</script>
+                    <td class='status Active'>" . $row["membership_status"] . "</td>
+                    <td><input type='text' name='Contact_Info' value='{$row['contact_info']}'></td>
+                    <td>
+                        <input type='hidden' name='MemberID' value='{$_POST["MemberID"]}'>
+                        <button class='action-btn save' title='Save' type='submit' name='Update' value='update'>
+                            <i class='fas fa-save'></i>
+                        </button>
 
-                <button class='action-btn cancel' title='Cancel' type='submit' name='Update' value='cancel'>
-                    <i class='fas fa-times'></i>
-                </button>
-            </td>
-            </tr>
+                        <button class='action-btn cancel' title='Cancel' type='submit' name='Update' value='cancel'>
+                            <i class='fas fa-times'></i>
+                        </button>
+                    </td>
+                </tr>
             </form>
             ";
         } else {
@@ -70,6 +72,7 @@ if ($member_result->num_rows > 0) {
                 <td>" . $subscription["membership_type"] . "</td>
                 <td>" . $subscription["start_date"] . "</td>
                 <td>" . $subscription["end_date"] . "</td>
+                <script>console.log('membership_STAT: " . $row['membership_status'] . "');</script>
                 <td class='status Active'>" . $row["membership_status"] . "</td>
                 <td>" . $row["contact_info"] . "</td>
                 <td>" .
