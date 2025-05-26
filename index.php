@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="./styles.css" />
-
   <title>Dashboard</title>
 </head>
 <body>
@@ -14,7 +12,7 @@
   <div class="sidebar regular">
     <img src="./images/logo.png" alt="Company Logo" class="logo" />
 
-    <a class="active regular" href="index.html">
+    <a class="active regular" href="index.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M8 0L0 6h2v10h4V10h4v6h4V6h2L8 0z" />
       </svg>
@@ -29,7 +27,7 @@
       Members
     </a>
 
-    <a href="staff.html">
+    <a href="staff.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M6 2a2 2 0 0 1 4 0v1H6V2zM4 5V4a4 4 0 1 1 8 0v1h1a1 1 0 0 1 1 1v3H2V6a1 1 0 0 1 1-1h1z" />
         <path d="M2 9h12v5H2V9z" />
@@ -51,89 +49,128 @@
       <h4 class="heading">Dashboard Overview</h4>
       <h5 class="subheading">Welcome back, Admin</h5>
 
-     <div class="flexContainerBig subheading">
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Total Members</h5>
-      <h2 class="heading">1,234</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-users"></i>
-      </div>
-    </div>
-  </div>
+          <?php
+    $conn = new mysqli("localhost", "root", "", "gym");
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
 
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Today's Check-ins</h5>
-      <h2 class="heading">25</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-user-check"></i>
-      </div>
-    </div>
-  </div>
+    // 1. Total Members
+    $totalMembersQuery = "SELECT COUNT(*) AS total_members FROM members";
+    $totalMembers = $conn->query($totalMembersQuery)->fetch_assoc()['total_members'];
 
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Revenue (monthly)</h5>
-      <h2 class="heading">24,500</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-money-bill-wave"></i>
-      </div>
-    </div>
-  </div>
+    // 2. Today's Check-ins
+    $today = date('Y-m-d');
+    $todayCheckinsQuery = "SELECT COUNT(*) AS checkins_today FROM attendance WHERE attendance_date = '$today'";
+    $checkinsToday = $conn->query($todayCheckinsQuery)->fetch_assoc()['checkins_today'];
 
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Active Staff</h5>
-      <h2 class="heading">25</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-user-tie"></i>
+    // 3. Monthly Revenue
+    $monthStart = date('Y-m-01');
+    $monthEnd = date('Y-m-t');
+    $monthlyRevenueQuery = "SELECT SUM(amount) AS revenue FROM payment WHERE payment_date BETWEEN '$monthStart' AND '$monthEnd'";
+    $monthlyRevenue = $conn->query($monthlyRevenueQuery)->fetch_assoc()['revenue'] ?? 0;
+
+    // 4. Active Staff (assuming status column was added)
+    $activeStaffQuery = "SELECT COUNT(*) AS active_staff FROM staff WHERE status = 'active'";
+    $activeStaffResult = $conn->query($activeStaffQuery);
+    $activeStaff = $activeStaffResult ? $activeStaffResult->fetch_assoc()['active_staff'] : 0;
+
+    $conn->close();
+    ?>
+
+    <div class="flexContainerBig subheading">
+      <div class="quickcontainer two-column">
+        <div class="text-column">
+          <h5>Total Members</h5>
+          <h2 class="heading"><?= $totalMembers ?></h2>
+        </div>
+        <div class="icon-column"><div class="icon-circle"><i class="fas fa-users"></i></div></div>
+      </div>
+
+      <div class="quickcontainer two-column">
+        <div class="text-column">
+          <h5>Today's Check-ins</h5>
+          <h2 class="heading"><?= $checkinsToday ?></h2>
+        </div>
+        <div class="icon-column"><div class="icon-circle"><i class="fas fa-user-check"></i></div></div>
+      </div>
+
+      <div class="quickcontainer two-column">
+        <div class="text-column">
+          <h5>Revenue (monthly)</h5>
+          <h2 class="heading">₱<?= number_format($monthlyRevenue, 2) ?></h2>
+        </div>
+        <div class="icon-column"><div class="icon-circle"><i class="fas fa-money-bill-wave"></i></div></div>
+      </div>
+
+      <div class="quickcontainer two-column">
+        <div class="text-column">
+          <h5>Active Staff</h5>
+          <h2 class="heading"><?= $activeStaff ?></h2>
+        </div>
+        <div class="icon-column"><div class="icon-circle"><i class="fas fa-user-tie"></i></div></div>
       </div>
     </div>
-  </div>
-</div>
 
 
       <div class="flexContainerBig">
         <!-- Recent Members Card -->
         <div class="quickcontainer recent-members">
-       <div class="header-row" style="display: flex; justify-content: space-between; align-items: center;">
-  <h4>Recent Members</h4>
-  <div style="position: relative;">
-    <button onclick="const dropdown = this.nextElementSibling; dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';"
-      style="background-color: white; color: black; padding: 8px 14px; font-size: 14px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
-      + Membership ▾
-    </button>
-    <div style="display: none; position: absolute; right: 0; background-color: white; color: black; box-shadow: 0px 2px 6px rgba(0,0,0,0.15); padding: 8px 0; min-width: 140px; border-radius: 5px; z-index: 1000;">
-      <button id="add-member-btn"
-      onclick="window.location.href='addmember.html';"   
-      style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
-        Add Member
-      </button>
-      <button id="walk-in-btn"
-      onclick="window.location.href='addmember.html';"  
-      style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
-        Walk-in
-      </button>
-      <button id="renewal-btn"
-      onclick="window.location.href='addmember.html';"   
-      style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
-        Renewal
-      </button>
-    </div>
-  </div>
+          <div class="header-row" style="display: flex; justify-content: space-between; align-items: center;">
+            <h4>Recent Members</h4>
+            <div style="position: relative;">
+              <button onclick="const dropdown = this.nextElementSibling; dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';"
+                style="background-color: white; color: black; padding: 8px 14px; font-size: 14px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
+                + Membership ▾
+              </button>
+              <div style="display: none; position: absolute; right: 0; background-color: white; color: black; box-shadow: 0px 2px 6px rgba(0,0,0,0.15); padding: 8px 0; min-width: 140px; border-radius: 5px; z-index: 1000;">
+                
+                <button onclick="window.location.href='addmember.html';"
+                  style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
+                  onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                  Add Member
+                </button>
+
+                <button onclick="filterMembers('walk-in')"
+                  style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
+                  onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                  Walk-in
+                </button>
+
+                <button onclick="filterMembers('weekly')"
+                  style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
+                  onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                  Weekly
+                </button>
+
+                <button onclick="filterMembers('monthly')"
+                  style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
+                  onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                  Monthly
+                </button>
+
+                <button onclick="filterMembers('all')"
+                  style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
+                  onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                  Show All
+                </button>
+              </div>
+            </div>
+
+            <script>
+              function filterMembers(type) {
+                const url = new URL(window.location.href);
+                if (type === 'all') {
+                  url.searchParams.delete('filter');
+                } else {
+                  url.searchParams.set('filter', type);
+                }
+                window.location.href = url.toString();
+              }
+            </script>
+
           </div>
+
           <table class="members-table" role="table" aria-label="Recent Members">
             <thead>
               <tr>
@@ -144,32 +181,39 @@
               </tr>
             </thead>
             <tbody>
-            <?php
-              // Database connection
+              <?php
               $conn = new mysqli("localhost", "root", "", "gym");
-
               if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
               }
 
-              // Get recent members with their last check-in
+              $filter = $_GET['filter'] ?? null;
               $sql = "
                 SELECT m.member_name, m.membership_status, mb.membership_type, MAX(a.attendance_date) AS last_checkin
                 FROM members m
                 LEFT JOIN subscribes s ON m.member_ID = s.member_ID
                 LEFT JOIN membership mb ON s.membership_ID = mb.membership_ID
                 LEFT JOIN attendance a ON m.member_ID = a.member_ID
+              ";
+
+              if ($filter === 'weekly' || $filter === 'monthly') {
+                $sql .= " WHERE mb.membership_type = '" . $conn->real_escape_string($filter) . "'";
+              } elseif ($filter === 'walk-in') {
+                $sql .= " WHERE mb.membership_type IS NULL";
+              }
+
+              $sql .= "
                 GROUP BY m.member_ID
                 ORDER BY last_checkin DESC
                 LIMIT 5;
               ";
 
-              $result = $conn->query($sql);
 
+              $result = $conn->query($sql);
               if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                   $statusClass = ucfirst($row['membership_status']);
-                  $lastCheckin = $row['last_checkin'] ? $row['last_checkin'] : 'N/A';
+                  $lastCheckin = $row['last_checkin'] ?? 'N/A';
                   $membership = $row['membership_type'] ?? 'N/A';
 
                   echo "<tr>
@@ -184,13 +228,13 @@
               }
 
               $conn->close();
-            ?>
-          </tbody>
+              ?>
+            </tbody>
           </table>
         </div>
 
+        <!-- Right Column -->
         <div class="flexColumn">
-          <!-- Quick Check-in Card -->
           <div class="quickcontainer checkin-box">
             <h4>Quick Check-in</h4>
             <div class="checkin-input">
@@ -199,22 +243,12 @@
             </div>
           </div>
 
-          <!-- Today's Staff Schedule Card -->
           <div class="quickcontainer staff-schedule">
             <h4>Top Active Members (month)</h4>
             <ul class="top-members-list">
-              <li>
-                <span class="member-name">LeBron James</span>
-                <span class="activity-count">32 check-ins</span>
-              </li>
-              <li>
-                <span class="member-name">Anthony Davis</span>
-                <span class="activity-count">28 check-ins</span>
-              </li>
-              <li>
-                <span class="member-name">Austin Reaves</span>
-                <span class="activity-count">24 check-ins</span>
-              </li>
+              <li><span class="member-name">LeBron James</span><span class="activity-count">32 check-ins</span></li>
+              <li><span class="member-name">Anthony Davis</span><span class="activity-count">28 check-ins</span></li>
+              <li><span class="member-name">Austin Reaves</span><span class="activity-count">24 check-ins</span></li>
             </ul>
           </div>
         </div>
@@ -222,5 +256,12 @@
     </div>
   </div>
 
+  <script>
+    function filterMembers(type) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('filter', type);
+      window.location.href = url.toString();
+    }
+  </script>
 </body>
 </html>
