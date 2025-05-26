@@ -76,7 +76,7 @@ if ($member_result->num_rows > 0) {
                 <td class='status Active'>" . $row["membership_status"] . "</td>
                 <td>" . $row["contact_info"] . "</td>
                 <td>" .
-                    "<form action='Members.php' method='post' onsubmit='return confirmDelete()'>".
+                    "<form action='delete_member.php' method='post' onsubmit='return confirmDelete()'>".
                         "<input type='text' style='display:none;' name='MemberID' value='".$row["member_ID"]."'>".
                         "<button class='action-btn delete' title='Delete'>
                         <i class='fas fa-trash'></i>
@@ -84,6 +84,7 @@ if ($member_result->num_rows > 0) {
                     "</form>".
                     "<form action='Members.php' method='post'>".
                         "<input type='text' style='display:none;' name='MemberID' value='".$row["member_ID"]."'>".
+                        "<input type='text' style='display:none;' name='action' value='edit'>".
                         "<button class='action-btn edit' title='Edit'>
                         <i class='fas fa-pen'></i>
                         </button>".
