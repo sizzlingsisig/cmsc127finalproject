@@ -28,6 +28,19 @@
     .page-btn:hover:not(.disabled) {
       background-color: #0056b3;
     }
+
+    .add-button {
+      margin-top: 10px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .add-button:hover {
+      background-color: #218838;
+    }
   </style>
   <title>Staff</title>
 </head>
@@ -35,7 +48,7 @@
 
 <div class="sidebar regular">
   <img src="./images/logo.png" alt="Company Logo" class="logo" />
-  <a href="index.php" class="active"><i class="fas fa-home icon"></i> Dashboard</a>
+  <a href="index.php"><i class="fas fa-home icon"></i> Dashboard</a>
   <a href="Members.php"><i class="fas fa-users icon"></i> Members</a>
   <a class="active" href="staff.php"><i class="fas fa-user-tie icon"></i> Staff</a>
   <a href="analytics.html"><i class="fas fa-chart-bar icon"></i> Analytics</a>
@@ -45,6 +58,11 @@
   <div class="header">
     <h4 class="heading">Staff Overview</h4>
     <h5 class="subheading">Manage your staff team effectively</h5>
+
+    <!-- ✅ Add Staff Button -->
+    <a href="addstaff.php" class="add-button">
+      <i class="fas fa-user-plus"></i> Add Staff
+    </a>
 
     <?php
     $conn = new mysqli("localhost", "root", "", "gym");
@@ -126,7 +144,6 @@
                 <button class='action-btn delete' onclick='confirmDelete({$row['staff_ID']}, \"{$staffName}\")' title='Delete'><i class='fas fa-trash'></i></button>
               </td>
             </tr>";
-
           }
         } else {
           echo "<tr><td colspan='5'>No staff found.</td></tr>";
