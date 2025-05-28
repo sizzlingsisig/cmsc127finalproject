@@ -260,7 +260,7 @@ include 'fetch_stats.php';
       const config = chartConfigs[type];
 
       currentChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
           labels: chartData.labels,
           datasets: [{
@@ -270,8 +270,8 @@ include 'fetch_stats.php';
             backgroundColor: config.backgroundColor,
             fill: true,
             tension: 0.4,
-            pointBackgroundColor: config.borderColor,
-            pointBorderColor: '#fff',
+            pointBackgroundColor: '#FF5733',
+            pointBorderColor: '#0000', 
             pointBorderWidth: 2,
             pointRadius: 6,
             pointHoverRadius: 8
