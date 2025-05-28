@@ -49,9 +49,9 @@
 <div class="sidebar regular">
   <img src="./images/logo.png" alt="Company Logo" class="logo" />
   <a href="index.php"><i class="fas fa-home icon"></i> Dashboard</a>
-  <a href="Members.php"><i class="fas fa-users icon"></i> Members</a>
+  <a href="memberFunctions/Members.php"><i class="fas fa-users icon"></i> Members</a>
   <a class="active" href="staff.php"><i class="fas fa-user-tie icon"></i> Staff</a>
-  <a href="analytics.html"><i class="fas fa-chart-bar icon"></i> Analytics</a>
+  <a href="analytics.php"><i class="fas fa-chart-bar icon"></i> Analytics</a>
 </div>
 
 <div class="content">

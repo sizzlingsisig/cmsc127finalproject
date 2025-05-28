@@ -99,7 +99,7 @@ include 'fetch_stats.php';
       Members
     </a>
 
-    <a href="staff.html">
+    <a href="staff.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M6 2a2 2 0 0 1 4 0v1H6V2zM4 5V4a4 4 0 1 1 8 0v1h1a1 1 0 0 1 1 1v3H2V6a1 1 0 0 1 1-1h1z" />
         <path d="M2 9h12v5H2V9z" />
@@ -107,7 +107,7 @@ include 'fetch_stats.php';
       Staff
     </a>
 
-    <a class="active" href="Analytics.php">
+    <a class="active" href="analytics.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M0 0h1v15h15v1H0V0z" />
         <path d="M2 13h2v-5H2v5zm3 0h2V6H5v7zm3 0h2V3H8v10zm3 0h2V9h-2v4z" />

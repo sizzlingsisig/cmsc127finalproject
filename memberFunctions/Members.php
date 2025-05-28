@@ -12,14 +12,14 @@
   <div class="sidebar regular">
     <img src="./images/logo.png" alt="Company Logo" class="logo" />
 
-    <a href="index.php">
+    <a href="../index.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M8 0L0 6h2v10h4V10h4v6h4V6h2L8 0z" />
       </svg>
       Dashboard
     </a>
 
-    <a class="active" href="members.html">
+    <a class="active" href="memberFunctions/Members.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z" />
         <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -27,7 +27,7 @@
       Members
     </a>
 
-    <a href="staff.html">
+    <a href="../staff.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M6 2a2 2 0 0 1 4 0v1H6V2zM4 5V4a4 4 0 1 1 8 0v1h1a1 1 0 0 1 1 1v3H2V6a1 1 0 0 1 1-1h1z" />
         <path d="M2 9h12v5H2V9z" />
@@ -35,7 +35,7 @@
       Staff
     </a>
 
-    <a href="analytics.html">
+    <a href="../analytics.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M0 0h1v15h15v1H0V0z" />
         <path d="M2 13h2v-5H2v5zm3 0h2V6H5v7zm3 0h2V3H8v10zm3 0h2V9h-2v4z" />
