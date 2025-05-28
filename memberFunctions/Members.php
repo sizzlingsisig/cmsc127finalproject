@@ -155,7 +155,6 @@
         <!-- Add more members as needed -->
       </tbody>
     </table>
-
   </div>
 </div>
 
