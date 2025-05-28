@@ -146,7 +146,7 @@
       </thead>
       <tbody id="members-list">
         <?php 
-        if(isset($_POST["MemberID"]) && $_POST["action"] == "edit") {
+        if(isset($_POST["MemberID"]) && isset($_POST["action"])) {
             include 'edit_member.php';
         } else {
             include 'displayMembers.php';

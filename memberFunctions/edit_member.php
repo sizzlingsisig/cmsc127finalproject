@@ -1,7 +1,7 @@
 <?php
 include 'DBConnector.php';
 
-$member_query = "SELECT * FROM members where membership_status != 'cancelled'"; 
+$member_query = "SELECT * FROM members"; 
 $member_result = $conn->query($member_query);
 
 if ($member_result->num_rows > 0) {
@@ -15,7 +15,7 @@ if ($member_result->num_rows > 0) {
         //var_dump($subscription);
 
 
-        if ($_POST["MemberID"] == $row['member_ID']) {
+        if ($_POST["MemberID"] == $row['member_ID'] && isset($_POST['action']) && $_POST['action'] == 'edit') {
             echo "
             <form action='update_member.php' method='post'>
                 <tr>
@@ -46,10 +46,41 @@ if ($member_result->num_rows > 0) {
                 </tr>
             </form>
             ";
-        } else {
-            echo"
+        } else if ($_POST["MemberID"] == $row['member_ID'] && isset($_POST['action']) && $_POST['action'] == 'renew' && $row['membership_status'] === 'cancelled') {
+            echo "
+            <form action='update_member.php' method='post'>
                 <tr>
-                <td>" . $row["member_name"] . "</td>
+                    <td><input type='text' name='MemberName' value='{$row['member_name']}'></td>
+                    <td>
+                        <select name='MemberPlan'>";
+                            echo "<option value='{$subscription['membership_ID']}' selected>{$subscription['membership_type']}</option>";
+
+                            include 'allPlans.php';
+
+                        echo "</select>
+                    </td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <script>console.log('membership_STATUS: " . $row['membership_status'] . "');</script>
+                    <td class='status Active'>" . $row["membership_status"] . "</td>
+                    <td><input type='text' name='Contact_Info' value='{$row['contact_info']}'></td>
+                    <td>
+                        <input type='hidden' name='MemberID' value='{$_POST["MemberID"]}'>
+                        <button class='action-btn save' title='Save' type='submit' name='Update' value='renew'>
+                            <i class='fas fa-save'></i>
+                        </button>
+
+                        <button class='action-btn cancel' title='Cancel' type='submit' name='Update' value='cancel'>
+                            <i class='fas fa-times'></i>
+                        </button>
+                    </td>
+                </tr>
+            </form>
+            ";
+        }else if ($row['membership_status'] != 'cancelled') {
+            echo"
+                <tr>                            
+                <td>" . $row["member_name"] . "</td>    
                 <td>" . $subscription["membership_type"] . "</td>
                 <td>" . $subscription["start_date"] . "</td>
                 <td>" . $subscription["end_date"] . "</td>
