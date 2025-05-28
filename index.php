@@ -52,7 +52,7 @@
             </button>
             <div class="dropdown-menu" style="display: none; position: absolute; right: 0; background-color: white; color: black; box-shadow: 0px 2px 6px rgba(0,0,0,0.15); padding: 8px 0; min-width: 140px; border-radius: 5px; z-index: 1000;">
               
-              <button onclick="window.location.href='addmember.html'" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+              <button onclick="window.location.href='./memberFunctions/addmember.html'" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
                 Add Member
               </button>
 

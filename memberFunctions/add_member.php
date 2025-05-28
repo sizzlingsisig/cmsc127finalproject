@@ -22,7 +22,6 @@ if ($member_name === '' || $contact_info === '' || $membership_type === '') {
     die("Missing required fields.");
 }
 
-// Step 1: Insert member
 $insertMemberSql = "INSERT INTO members (member_name, contact_info) VALUES (?, ?)";
 $stmt = $conn->prepare($insertMemberSql);
 $stmt->bind_param("ss", $member_name, $contact_info);
@@ -32,7 +31,6 @@ if (!$stmt->execute()) {
 $member_id = $stmt->insert_id;
 $stmt->close();
 
-// Step 2: Get membership info (or insert default if not exists)
 $getMembershipSql = "SELECT membership_ID, price, duration FROM membership WHERE membership_type = ?";
 $stmt = $conn->prepare($getMembershipSql);
 $stmt->bind_param("s", $membership_type);
@@ -40,7 +38,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    // Insert default membership
     $default_price = 100.00;
     $default_duration = 1;
 
@@ -63,7 +60,6 @@ if ($result->num_rows === 0) {
 }
 $stmt->close();
 
-// Step 3: Insert into subscribes table
 $start_date = date('Y-m-d');
 $end_date = date('Y-m-d', strtotime("+$duration days"));
 $purchase_date = $start_date;
@@ -76,9 +72,8 @@ if (!$stmt->execute()) {
 }
 $stmt->close();
 
-// ✅ Step 4: Insert payment record
-$staff_id = 1; // Assuming default staff ID for now; adjust as needed
-$payment_type = 'cash'; // You may customize this if payment method is selectable
+$staff_id = 1; /
+$payment_type = 'cash'; 
 
 $insertPaymentSql = "INSERT INTO payment (member_ID, staff_ID, membership_ID, amount, payment_date, payment_type)
                      VALUES (?, ?, ?, ?, CURDATE(), ?)";
@@ -92,6 +87,6 @@ $stmt->close();
 $conn->close();
 
 // Redirect back
-header("Location: ./memberFunctions/Members.php?added=1");
+header("Location: Members.php?added=1");
 exit();
 ?>

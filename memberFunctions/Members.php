@@ -128,7 +128,7 @@
     <!-- Row 1: Search and Add Member -->
     <div class="filter-row" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px;">
       <input type="text" id="search-members" placeholder="Search members..." class="search-bar" />
-      <button id="add-member-btn" class="add-member-btn">+ Add Member</button>
+      <button id="add-member-btn" class="add-member-btn"><a href = "addmember.html">+ Add Member</a></button>
     </div>
 
     <!-- Row 2: Table -->
