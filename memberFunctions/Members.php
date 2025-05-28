@@ -6,6 +6,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="./styles.css" />
   <title>Members</title>
+  <style>
+    .action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center; /* Optional: center within the cell */
+}
+
+.action-buttons form {
+  margin: 0; /* Remove default spacing */
+}
+
+  </style>
 </head>
 <body>
 
@@ -143,13 +155,6 @@
         <!-- Add more members as needed -->
       </tbody>
     </table>
-
-    <!-- Row 3: Pagination -->
-    <div class="pagination">
-      <button class="page-btn" id="prev-page">&laquo; Previous</button>
-      <span id="page-number">Page 1</span>
-      <button class="page-btn" id="next-page">Next &raquo;</button>
-    </div>
 
   </div>
 </div>

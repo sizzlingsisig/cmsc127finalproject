@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="./styles.css" />
+  <link rel="stylesheet" type="text/css" href="./add_member.css" />
+  <title>Dashboard</title>
+</head>
+<body>
+
+<div class="sidebar regular">
+  <img src="./images/logo.png" alt="Company Logo" class="logo" />
+  <a class="regular" href="index.php"><i class="fas fa-home icon"></i> Dashboard</a>
+  <a href="memberFunctions/Members.php" class = "active"><i class="fas fa-users icon"></i> Members</a>
+  <a href="staff.php"><i class="fas fa-user-tie icon"></i> Staff</a>
+  <a href="analytics.php"><i class="fas fa-chart-bar icon"></i> Analytics</a>
+</div>
+
+<div class="main-content">
+  <div class="form-container">
+    <form method="POST" action="add_member.php">
+      <!-- Name -->
+      <label for="member_name">Full Name</label>
+      <input type="text" id="member_name" name="member_name" placeholder="Enter full name" required />
+
+      <!-- Contact -->
+      <label for="contact_info">Contact Information</label>
+      <input type="text" id="contact_info" name="contact_info" placeholder="Enter contact number or email" required />
+
+      <!-- Membership Type Dropdown -->
+      <label for="membership_type">Membership Type</label>
+      <select id="membership_type" name="membership_type" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px;">
+        <option value="" disabled selected>Select membership type</option>
+        <option value="walk-in">Walk-in</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="renewal">Renewal</option>
+      </select>
+
+      <!-- Submit -->
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script src="checkin.js"></script>
+<script src="filtermembers.js"></script>
+</body>
+</html>

@@ -1,21 +1,21 @@
 :root {
-  --primary-brown: #4B2E0B;           /* Slightly warmer/darker */
-  --sidebar-hover-bg: #7F6B53;        /* Warmer hover brown */
-  --sidebar-active-bg: #6D5A41;       /* Slightly lighter active brown */
+  --primary-brown: #4B2E0B;          
+  --sidebar-hover-bg: #7F6B53;       
+  --sidebar-active-bg: #6D5A41;       
   
-  --button-blue: #2563EB;              /* More vibrant blue (#3b82f6 → #2563eb) */
-  --button-blue-dark: #1D4ED8;         /* Darker shade for hover */
+  --button-blue: #2563EB;              
+  --button-blue-dark: #1D4ED8;         
   
-  --button-green: #22C55E;             /* Keep your fresh green */
-  --button-green-light: #4ADE80;       /* Lighter green for hover */
+  --button-green: #22C55E;            
+  --button-green-light: #4ADE80;       
   
-  --text-active: #16A34A;              /* Keep strong green */
-  --text-inactive: #6B7280;            /* Medium gray for inactive text (#9ca3af → #6b7280) */
+  --text-active: #16A34A;              
+  --text-inactive: #6B7280;            
   
-  --text-primary: #1F2937;             /* Dark slate gray for primary text (instead of black) */
-  --text-secondary: #374151;           /* Slightly lighter text for subheadings */
+  --text-primary: #1F2937;             
+  --text-secondary: #374151;          
   
-  --background-light: #F9FAFB;         /* Very light gray background for content */
+  --background-light: #F9FAFB;        
   
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
@@ -26,6 +26,7 @@ body {
   margin: 0;
   font-family: "Inter", sans-serif;
 }
+
 
 .logo {
   width: 40vw;
@@ -386,3 +387,4 @@ body {
   outline: 2px solid var(--button-blue);
   outline-offset: 2px;
 }
+

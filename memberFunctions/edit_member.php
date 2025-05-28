@@ -1,7 +1,7 @@
 <?php
 include 'DBConnector.php';
 
-$member_query = "SELECT * FROM members";
+$member_query = "SELECT * FROM members where membership_status != 'cancelled'"; 
 $member_result = $conn->query($member_query);
 
 if ($member_result->num_rows > 0) {
@@ -9,7 +9,7 @@ if ($member_result->num_rows > 0) {
         $subscription_query = "SELECT * 
                                 FROM membership m
                                 JOIN subscribes s ON m.membership_ID = s.membership_ID
-                                WHERE s.member_ID = " . $row["member_ID"] . ";" ;
+                                WHERE s.member_ID = " . $row["member_ID"] . ";";
         $subscription = $conn->query($subscription_query)->fetch_assoc(); // diri na ga problema if ang isa ka member may multiple subscriptions, karon lng ni kayohon ah pota na
 
         //var_dump($subscription);

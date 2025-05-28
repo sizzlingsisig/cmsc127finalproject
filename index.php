@@ -26,7 +26,7 @@
     $conn = new mysqli("localhost", "root", "", "gym");
     if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
-    $totalMembers = $conn->query("SELECT COUNT(*) AS total FROM members")->fetch_assoc()['total'];
+    $totalMembers = $conn->query("SELECT COUNT(*) AS total FROM members where membership_status = 'active'")->fetch_assoc()['total'];
     $checkinsToday = $conn->query("SELECT COUNT(*) AS today FROM attendance WHERE attendance_date = CURDATE()")->fetch_assoc()['today'];
     $revenue = $conn->query("SELECT SUM(amount) AS revenue FROM payment WHERE payment_date BETWEEN CURDATE() - INTERVAL DAYOFMONTH(CURDATE())-1 DAY AND LAST_DAY(CURDATE())")->fetch_assoc()['revenue'] ?? 0;
     $activeStaff = $conn->query("SELECT COUNT(*) AS active FROM staff WHERE status = 'active'")->fetch_assoc()['active'];

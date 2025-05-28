@@ -92,6 +92,6 @@ $stmt->close();
 $conn->close();
 
 // Redirect back
-header("Location: Members.php?added=1");
+header("Location: ./memberFunctions/Members.php?added=1");
 exit();
 ?>

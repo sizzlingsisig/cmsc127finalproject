@@ -1,0 +1,65 @@
+/* Main Content Centering */
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Form Container */
+.form-container {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Form Labels */
+form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  margin-top: 20px;
+  color: #333;
+}
+
+/* Input & Select Styling */
+form input[type="text"],
+form select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form select:focus {
+  border-color: #4a90e2;
+  outline: none;
+  background-color: #fff;
+}
+
+/* Submit Button */
+form button[type="submit"] {
+  margin-top: 30px;
+  width: 100%;
+  padding: 14px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+  background-color: #357abd;
+}

@@ -1,6 +1,6 @@
 <?php
 // Include the DB connection
-include 'DBConnector.php';
+include './memberFunctions/DBConnector.php';
 
 // Initialize variables to avoid potential undefined errors
 $totalMembers = 0;
