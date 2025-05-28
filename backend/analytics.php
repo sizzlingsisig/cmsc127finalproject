@@ -1,17 +1,27 @@
+<?php
+// Ensure your PHP code to fetch stats is correct and included here as per your previous code.
+
+// Include the DB connection and fetch stats file
+include 'DBConnector.php';
+include 'fetch_stats.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" type="text/css" href="./styles.css" />
-  <title>Members</title>
+  <title>Analytics</title>
 </head>
 <body>
 
   <div class="sidebar regular">
     <img src="./images/logo.png" alt="Company Logo" class="logo" />
 
+    <!-- Your Sidebar Links -->
     <a href="index.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M8 0L0 6h2v10h4V10h4v6h4V6h2L8 0z" />
@@ -19,7 +29,7 @@
       Dashboard
     </a>
 
-    <a class="active" href="members.html">
+    <a href="Members.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z" />
         <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
@@ -35,7 +45,7 @@
       Staff
     </a>
 
-    <a href="analytics.html">
+    <a class="active" href="Analytics.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M0 0h1v15h15v1H0V0z" />
         <path d="M2 13h2v-5H2v5zm3 0h2V6H5v7zm3 0h2V3H8v10zm3 0h2V9h-2v4z" />
@@ -46,17 +56,15 @@
 
   <div class="content">
     <div class="header">
-      <h4 class="heading">Members Overview</h4>
-      <h5 class="subheading">Welcome back, Admin</h5>
+      <h4 class="heading">Analytics Dashboard</h4>
+      <h5 class="subheading">Key performance indicators for this month</h5>
 
       <!-- Stats Section -->
       <div class="flexContainerBig subheading">
         <div class="quickcontainer two-column">
           <div class="text-column">
             <h5>Total Members</h5>
-            <?php
-                include 'total_members.php';
-            ?>
+            <h2 class="heading"><?php echo number_format($totalMembers); ?></h2> <!-- PHP for Total Members -->
           </div>
           <div class="icon-column">
             <div class="icon-circle">
@@ -67,24 +75,8 @@
 
         <div class="quickcontainer two-column">
           <div class="text-column">
-            <h5>Active Members</h5>
-            <?php
-                include 'active_members.php';
-            ?>
-          </div>
-          <div class="icon-column">
-            <div class="icon-circle">
-              <i class="fas fa-user-check"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="quickcontainer two-column">
-          <div class="text-column">
             <h5>New This Month</h5>
-            <?php
-                include 'month_new_members.php';
-            ?>
+            <h2 class="heading"><?php echo number_format($newMembersThisMonth); ?></h2> <!-- PHP for New Members -->
           </div>
           <div class="icon-column">
             <div class="icon-circle">
@@ -95,68 +87,81 @@
 
         <div class="quickcontainer two-column">
           <div class="text-column">
-            <h5>Expiring Soon</h5>
-            <?php
-                include 'expiring.php';
-            ?>
+            <h5>Attendance Rate</h5>
+            <h2 class="heading"><?php echo number_format($attendanceRate, 2); ?>%</h2> <!-- PHP for Attendance Rate -->
           </div>
           <div class="icon-column">
             <div class="icon-circle">
-              <i class="fas fa-user-clock"></i>
+              <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="quickcontainer two-column">
+          <div class="text-column">
+            <h5>Monthly Revenue</h5>
+            <h2 class="heading">$<?php echo number_format($monthlyRevenue, 2); ?></h2> <!-- PHP for Monthly Revenue -->
+          </div>
+          <div class="icon-column">
+            <div class="icon-circle">
+              <i class="fas fa-dollar-sign"></i>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Members Section -->
-    <!-- Members Section -->
-<div class="flexContainerBig">
-  <div class="quickcontainer recent-members">
-
-    <!-- Row 1: Search and Add Member -->
-    <div class="filter-row" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px;">
-      <input type="text" id="search-members" placeholder="Search members..." class="search-bar" />
-      <button id="add-member-btn" class="add-member-btn">+ Add Member</button>
+      <!-- Line Chart for Member Data -->
+      <canvas id="membersChart" width="400" height="200"></canvas>
     </div>
+  </div>
 
-    <!-- Row 2: Table -->
-    <table class="members-table">
-      <thead>
-        <tr>
-          <th><button class="sort-btn" data-column="0">Member</button></th>
-          <th><button class="sort-btn" data-column="1">Plan</button></th>
-          <th><button class="sort-btn" data-column="2">Start Date</button></th>
-          <th><button class="sort-btn" data-column="3">End Date</button></th>
-          <th><button class="sort-btn" data-column="4">Status</button></th>
-          <th><button class="sort-btn" data-column="5">Contact Info</button></th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="members-list">
-        <?php 
-        if(isset($_POST["MemberID"]) && $_POST["action"] == "edit") {
-            include 'edit_member.php';
-        } else {
-            include 'displayMembers.php';
+  <script>
+    // Ensure that the DOM is loaded before trying to access the canvas
+    document.addEventListener("DOMContentLoaded", function() {
+      // Dynamically pass PHP variables to JavaScript for the chart
+      const memberData = {
+        labels: <?php echo json_encode($monthLabels); ?>, // PHP array converted to JS array
+        datasets: [{
+          label: 'Number of Members per Month',
+          data: <?php echo json_encode($monthlyMemberCounts); ?>, // PHP array converted to JS array
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,  // To create an area chart, set to true
+          tension: 0.4  // Smoothing the curve of the line
+        }]
+      };
+
+      // Chart options
+      const options = {
+        responsive: true,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Months'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Number of Members'
+            },
+            beginAtZero: true
+          }
         }
-        ?>
-        <!-- Add more members as needed -->
-      </tbody>
-    </table>
+      };
 
-    <!-- Row 3: Pagination -->
-    <div class="pagination">
-      <button class="page-btn" id="prev-page">&laquo; Previous</button>
-      <span id="page-number">Page 1</span>
-      <button class="page-btn" id="next-page">Next &raquo;</button>
-    </div>
+      // Get the canvas context
+      const ctx = document.getElementById('membersChart').getContext('2d');
 
-  </div>
-</div>
-
-
-    </div>
-  </div>
+      // Create the chart
+      new Chart(ctx, {
+        type: 'line',  // Line chart
+        data: memberData,
+        options: options
+      });
+    });
+  </script>
 
   <script src="members.js"></script>
 </body>
