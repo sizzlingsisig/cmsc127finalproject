@@ -42,7 +42,7 @@ if ($conn->connect_error) {
       Members
     </a>
 
-    <a href="staff.html">
+    <a href="staff.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
         <path d="M6 2a2 2 0 0 1 4 0v1H6V2zM4 5V4a4 4 0 1 1 8 0v1h1a1 1 0 0 1 1 1v3H2V6a1 1 0 0 1 1-1h1z" />
         <path d="M2 9h12v5H2V9z" />

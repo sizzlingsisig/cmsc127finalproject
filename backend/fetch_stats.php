@@ -1,5 +1,6 @@
 <?php
-include 'DBConnector.php'; // Ensure DB connection is correctly included
+// Include the DB connection
+include 'DBConnector.php';
 
 // Initialize variables to avoid potential undefined errors
 $totalMembers = 0;
@@ -8,6 +9,8 @@ $attendanceRate = 0;
 $monthlyRevenue = 0;
 $monthLabels = [];
 $monthlyMemberCounts = [];
+$monthlyAttendanceCounts = [];
+$monthlyRevenueCounts = [];
 
 // Fetching total members
 $totalMembersQuery = "SELECT COUNT(*) AS total_members FROM members WHERE membership_status = 'active'";
@@ -21,11 +24,11 @@ if ($totalMembersResult) {
 }
 
 // Fetching new members this month (based on payment_date)
-$newMembersQuery = "SELECT COUNT(DISTINCT m.member_ID) AS new_members_this_month 
-                    FROM members m 
-                    INNER JOIN payment p ON m.member_ID = p.member_ID 
-                    WHERE m.membership_status = 'active' 
-                    AND MONTH(p.payment_date) = MONTH(CURRENT_DATE)";
+$newMembersQuery = "SELECT COUNT(DISTINCT m.member_ID) AS new_members_this_month
+                     FROM members m
+                     INNER JOIN payment p ON m.member_ID = p.member_ID
+                     WHERE m.membership_status = 'active'
+                     AND MONTH(p.payment_date) = MONTH(CURRENT_DATE)";
 $newMembersResult = $conn->query($newMembersQuery);
 
 if ($newMembersResult) {
@@ -36,9 +39,9 @@ if ($newMembersResult) {
 }
 
 // Fetching attendance rate
-$attendanceRateQuery = "SELECT (COUNT(DISTINCT member_ID) / (SELECT COUNT(*) FROM members WHERE membership_status = 'active')) * 100 AS attendance_rate 
-                        FROM attendance 
-                        WHERE MONTH(attendance_date) = MONTH(CURRENT_DATE)";
+$attendanceRateQuery = "SELECT (COUNT(DISTINCT member_ID) / (SELECT COUNT(*) FROM members WHERE membership_status = 'active')) * 100 AS attendance_rate
+                         FROM attendance
+                         WHERE MONTH(attendance_date) = MONTH(CURRENT_DATE)";
 $attendanceRateResult = $conn->query($attendanceRateQuery);
 
 if ($attendanceRateResult) {
@@ -70,14 +73,41 @@ $monthlyMemberResult = $conn->query($monthlyMemberQuery);
 
 if ($monthlyMemberResult) {
     while ($row = $monthlyMemberResult->fetch_assoc()) {
-        // Get month name from month number
-        $monthName = date('F', mktime(0, 0, 0, $row['month'], 10)); // Get full month name
+        $monthName = date('F', mktime(0, 0, 0, $row['month'], 10));
         $monthLabels[] = $monthName;
-        $monthlyMemberCounts[] = (int)$row['member_count']; // Ensure the count is treated as an integer
+        $monthlyMemberCounts[] = (int)$row['member_count'];
     }
 } else {
     error_log("Error fetching monthly member counts: " . $conn->error);
 }
+
+// Fetching monthly attendance counts
+$monthlyAttendanceQuery = "SELECT MONTH(attendance_date) AS month, COUNT(DISTINCT member_ID) AS attendance_count
+                          FROM attendance
+                          GROUP BY MONTH(attendance_date)
+                          ORDER BY MONTH(attendance_date)";
+$monthlyAttendanceResult = $conn->query($monthlyAttendanceQuery);
+
+if ($monthlyAttendanceResult) {
+    while ($row = $monthlyAttendanceResult->fetch_assoc()) {
+        $monthlyAttendanceCounts[] = (int)$row['attendance_count'];
+    }
+} else {
+    error_log("Error fetching monthly attendance counts: " . $conn->error);
+}
+
+// Fetching monthly revenue counts
+$monthlyRevenueChartQuery = "SELECT MONTH(payment_date) AS month, SUM(amount) AS revenue
+                            FROM payment
+                            GROUP BY MONTH(payment_date)
+                            ORDER BY MONTH(payment_date)";
+$monthlyRevenueChartResult = $conn->query($monthlyRevenueChartQuery);
+
+if ($monthlyRevenueChartResult) {
+    while ($row = $monthlyRevenueChartResult->fetch_assoc()) {
+        $monthlyRevenueCounts[] = (float)$row['revenue'];
+    }
+} else {
+    error_log("Error fetching monthly revenue counts: " . $conn->error);
+}
 ?>
-
-

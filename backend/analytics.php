@@ -1,8 +1,5 @@
 <?php
-// Ensure your PHP code to fetch stats is correct and included here as per your previous code.
-
-// Include the DB connection and fetch stats file
-include 'DBConnector.php';
+// Include the fetch stats file
 include 'fetch_stats.php';
 ?>
 
@@ -15,6 +12,71 @@ include 'fetch_stats.php';
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" type="text/css" href="./styles.css" />
   <title>Analytics</title>
+  <style>
+    .chart-buttons {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .chart-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #e2e8f0;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .chart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: #cbd5e1;
+      color: #475569;
+    }
+    
+    .chart-btn.active {
+      background: #0891b2;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(8, 145, 178, 0.3);
+    }
+    
+    .chart-btn.active:hover {
+      background: #0e7490;
+    }
+    
+    .chart-container {
+      margin: 30px 0;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      height: 500px; /* Fixed height for consistency */
+    }
+    
+    #analyticsChart {
+      max-width: 100%;
+      height: 400px !important; /* Set specific height */
+    }
+    
+    .chart-title {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
 
@@ -64,7 +126,7 @@ include 'fetch_stats.php';
         <div class="quickcontainer two-column">
           <div class="text-column">
             <h5>Total Members</h5>
-            <h2 class="heading"><?php echo number_format($totalMembers); ?></h2> <!-- PHP for Total Members -->
+            <h2 class="heading"><?php echo number_format($totalMembers); ?></h2>
           </div>
           <div class="icon-column">
             <div class="icon-circle">
@@ -76,7 +138,7 @@ include 'fetch_stats.php';
         <div class="quickcontainer two-column">
           <div class="text-column">
             <h5>New This Month</h5>
-            <h2 class="heading"><?php echo number_format($newMembersThisMonth); ?></h2> <!-- PHP for New Members -->
+            <h2 class="heading"><?php echo number_format($newMembersThisMonth); ?></h2>
           </div>
           <div class="icon-column">
             <div class="icon-circle">
@@ -88,7 +150,7 @@ include 'fetch_stats.php';
         <div class="quickcontainer two-column">
           <div class="text-column">
             <h5>Attendance Rate</h5>
-            <h2 class="heading"><?php echo number_format($attendanceRate, 2); ?>%</h2> <!-- PHP for Attendance Rate -->
+            <h2 class="heading"><?php echo number_format($attendanceRate, 2); ?>%</h2>
           </div>
           <div class="icon-column">
             <div class="icon-circle">
@@ -100,7 +162,7 @@ include 'fetch_stats.php';
         <div class="quickcontainer two-column">
           <div class="text-column">
             <h5>Monthly Revenue</h5>
-            <h2 class="heading">$<?php echo number_format($monthlyRevenue, 2); ?></h2> <!-- PHP for Monthly Revenue -->
+            <h2 class="heading">$<?php echo number_format($monthlyRevenue, 2); ?></h2>
           </div>
           <div class="icon-column">
             <div class="icon-circle">
@@ -110,59 +172,165 @@ include 'fetch_stats.php';
         </div>
       </div>
 
-      <!-- Line Chart for Member Data -->
-      <canvas id="membersChart" width="400" height="200"></canvas>
+      <!-- Chart Buttons -->
+      <div class="chart-buttons">
+        <button class="chart-btn active" onclick="showChart('members')" id="membersBtn">
+          <i class="fas fa-users"></i>
+          Members Chart
+        </button>
+        <button class="chart-btn" onclick="showChart('attendance')" id="attendanceBtn">
+          <i class="fas fa-chart-line"></i>
+          Attendance Chart
+        </button>
+        <button class="chart-btn" onclick="showChart('revenue')" id="revenueBtn">
+          <i class="fas fa-dollar-sign"></i>
+          Revenue Chart
+        </button>
+      </div>
+
+      <!-- Chart Container -->
+      <div class="chart-container">
+        <h3 class="chart-title" id="chartTitle">Members per Month</h3>
+        <canvas id="analyticsChart"></canvas>
+      </div>
     </div>
   </div>
 
   <script>
-    // Ensure that the DOM is loaded before trying to access the canvas
-    document.addEventListener("DOMContentLoaded", function() {
-      // Dynamically pass PHP variables to JavaScript for the chart
-      const memberData = {
-        labels: <?php echo json_encode($monthLabels); ?>, // PHP array converted to JS array
-        datasets: [{
-          label: 'Number of Members per Month',
-          data: <?php echo json_encode($monthlyMemberCounts); ?>, // PHP array converted to JS array
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          fill: true,  // To create an area chart, set to true
-          tension: 0.4  // Smoothing the curve of the line
-        }]
-      };
+    let currentChart = null;
+    let currentChartType = 'members';
 
-      // Chart options
-      const options = {
-        responsive: true,
-        scales: {
-          x: {
-            title: {
+    // Chart data from PHP
+    const chartData = {
+      labels: <?php echo json_encode($monthLabels); ?>,
+      members: <?php echo json_encode($monthlyMemberCounts); ?>,
+      attendance: <?php echo json_encode($monthlyAttendanceCounts); ?>,
+      revenue: <?php echo json_encode($monthlyRevenueCounts); ?>
+    };
+
+    // Chart configurations
+    const chartConfigs = {
+      members: {
+        title: 'Members per Month',
+        label: 'Number of Members',
+        data: chartData.members,
+        backgroundColor: [
+          '#0891b2', '#06b6d4', '#22d3ee', '#67e8f9', '#a7f3d0', '#86efac'
+        ],
+        borderColor: '#ffffff',
+        yAxisTitle: 'Number of Members'
+      },
+      attendance: {
+        title: 'Attendance per Month',
+        label: 'Number of Attendees',
+        data: chartData.attendance,
+        backgroundColor: [
+          '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e'
+        ],
+        borderColor: '#ffffff',
+        yAxisTitle: 'Number of Attendees'
+      },
+      revenue: {
+        title: 'Revenue per Month',
+        label: 'Revenue ($)',
+        data: chartData.revenue,
+        backgroundColor: [
+          '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899'
+        ],
+        borderColor: '#ffffff',
+        yAxisTitle: 'Revenue ($)'
+      }
+    };
+
+    function showChart(type) {
+      // Update active button
+      document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(type + 'Btn').classList.add('active');
+
+      // Update chart title
+      document.getElementById('chartTitle').textContent = chartConfigs[type].title;
+
+      // Destroy existing chart
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      // Create new chart
+      const ctx = document.getElementById('analyticsChart').getContext('2d');
+      const config = chartConfigs[type];
+
+      currentChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: chartData.labels,
+          datasets: [{
+            label: config.label,
+            data: config.data,
+            borderColor: config.borderColor,
+            backgroundColor: config.backgroundColor,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: config.borderColor,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, // Allow custom sizing
+          plugins: {
+            legend: {
               display: true,
-              text: 'Months'
+              position: 'top'
             }
           },
-          y: {
-            title: {
-              display: true,
-              text: 'Number of Members'
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Months',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
             },
-            beginAtZero: true
+            y: {
+              title: {
+                display: true,
+                text: config.yAxisTitle,
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                }
+              },
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            }
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
           }
         }
-      };
-
-      // Get the canvas context
-      const ctx = document.getElementById('membersChart').getContext('2d');
-
-      // Create the chart
-      new Chart(ctx, {
-        type: 'line',  // Line chart
-        data: memberData,
-        options: options
       });
+
+      currentChartType = type;
+    }
+
+    // Initialize the page
+    document.addEventListener("DOMContentLoaded", function() {
+      // Show default chart (members)
+      showChart('members');
     });
   </script>
 
-  <script src="members.js"></script>
 </body>
 </html>

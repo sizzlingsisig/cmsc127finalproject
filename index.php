@@ -3,224 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="./styles.css" />
-
   <title>Dashboard</title>
 </head>
 <body>
 
-  <div class="sidebar regular">
-    <img src="./images/logo.png" alt="Company Logo" class="logo" />
+<div class="sidebar regular">
+  <img src="./images/logo.png" alt="Company Logo" class="logo" />
+  <a class="active regular" href="index.php"><i class="fas fa-home icon"></i> Dashboard</a>
+  <a href="Members.php"><i class="fas fa-users icon"></i> Members</a>
+  <a href="staff.php"><i class="fas fa-user-tie icon"></i> Staff</a>
+  <a href="analytics.html"><i class="fas fa-chart-bar icon"></i> Analytics</a>
+</div>
 
-    <a class="active regular" href="index.html">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
-        <path d="M8 0L0 6h2v10h4V10h4v6h4V6h2L8 0z" />
-      </svg>
-      Dashboard
-    </a>
+<div class="content">
+  <div class="header">
+    <h4 class="heading">Dashboard Overview</h4>
+    <h5 class="subheading">Welcome back, Admin</h5>
 
-    <a href="Members.php">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
-        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3z" />
-        <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-      </svg>
-      Members
-    </a>
+    <?php
+    $conn = new mysqli("localhost", "root", "", "gym");
+    if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
-    <a href="staff.html">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
-        <path d="M6 2a2 2 0 0 1 4 0v1H6V2zM4 5V4a4 4 0 1 1 8 0v1h1a1 1 0 0 1 1 1v3H2V6a1 1 0 0 1 1-1h1z" />
-        <path d="M2 9h12v5H2V9z" />
-      </svg>
-      Staff
-    </a>
+    $totalMembers = $conn->query("SELECT COUNT(*) AS total FROM members")->fetch_assoc()['total'];
+    $checkinsToday = $conn->query("SELECT COUNT(*) AS today FROM attendance WHERE attendance_date = CURDATE()")->fetch_assoc()['today'];
+    $revenue = $conn->query("SELECT SUM(amount) AS revenue FROM payment WHERE payment_date BETWEEN CURDATE() - INTERVAL DAYOFMONTH(CURDATE())-1 DAY AND LAST_DAY(CURDATE())")->fetch_assoc()['revenue'] ?? 0;
+    $activeStaff = $conn->query("SELECT COUNT(*) AS active FROM staff WHERE status = 'active'")->fetch_assoc()['active'];
 
-    <a href="analytics.html">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icon" viewBox="0 0 16 16">
-        <path d="M0 0h1v15h15v1H0V0z" />
-        <path d="M2 13h2v-5H2v5zm3 0h2V6H5v7zm3 0h2V3H8v10zm3 0h2V9h-2v4z" />
-      </svg>
-      Analytics
-    </a>
-  </div>
+    $conn->close();
+    ?>
 
-  <div class="content">
-    <div class="header">
-      <h4 class="heading">Dashboard Overview</h4>
-      <h5 class="subheading">Welcome back, Admin</h5>
-
-     <div class="flexContainerBig subheading">
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Total Members</h5>
-      <h2 class="heading">1,234</h2>
+    <div class="flexContainerBig subheading">
+      <div class="quickcontainer two-column"><div class="text-column"><h5>Total Members</h5><h2 class="heading"><?= $totalMembers ?></h2></div><div class="icon-column"><div class="icon-circle"><i class="fas fa-users"></i></div></div></div>
+      <div class="quickcontainer two-column"><div class="text-column"><h5>Today's Check-ins</h5><h2 class="heading"><?= $checkinsToday ?></h2></div><div class="icon-column"><div class="icon-circle"><i class="fas fa-user-check"></i></div></div></div>
+      <div class="quickcontainer two-column"><div class="text-column"><h5>Revenue (monthly)</h5><h2 class="heading">₱<?= number_format($revenue, 2) ?></h2></div><div class="icon-column"><div class="icon-circle"><i class="fas fa-money-bill-wave"></i></div></div></div>
+      <div class="quickcontainer two-column"><div class="text-column"><h5>Active Staff</h5><h2 class="heading"><?= $activeStaff ?></h2></div><div class="icon-column"><div class="icon-circle"><i class="fas fa-user-tie"></i></div></div></div>
     </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-users"></i>
+
+    <div class="flexContainerBig">
+      <!-- Recent Members -->
+      <div class="quickcontainer recent-members">
+        <div class="header-row" style="display: flex; justify-content: space-between; align-items: center;">
+          <h4>Recent Check-ins</h4>
+          <div style="position: relative;">
+            <button onclick="toggleDropdown(this)" style="background-color: white; color: black; padding: 8px 14px; font-size: 14px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
+              + Membership ▾
+            </button>
+            <div class="dropdown-menu" style="display: none; position: absolute; right: 0; background-color: white; color: black; box-shadow: 0px 2px 6px rgba(0,0,0,0.15); padding: 8px 0; min-width: 140px; border-radius: 5px; z-index: 1000;">
+              
+              <button onclick="window.location.href='addmember.html'" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                Add Member
+              </button>
+
+              <button onclick="filterMembers('walk-in')" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                Walk-in
+              </button>
+
+              <button onclick="filterMembers('weekly')" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                Weekly
+              </button>
+
+              <button onclick="filterMembers('monthly')" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                Monthly
+              </button>
+
+              <button onclick="filterMembers('all')" style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
+                Show All
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <table class="members-table" role="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Membership</th>
+              <th>Status</th>
+              <th>Last Check-in</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php
+          $conn = new mysqli("localhost", "root", "", "gym");
+          if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
+
+         $filter = $_GET['filter'] ?? null;
+        $sql = "
+          SELECT m.member_name, m.membership_status, mb.membership_type, MAX(a.attendance_date) AS last_checkin
+          FROM members m
+          LEFT JOIN subscribes s ON m.member_ID = s.member_ID
+          LEFT JOIN membership mb ON s.membership_ID = mb.membership_ID
+          LEFT JOIN attendance a ON m.member_ID = a.member_ID
+        ";
+
+        // Handle filters correctly
+        if ($filter === 'weekly' || $filter === 'monthly' || $filter === 'walk-in') {
+          $sql .= " WHERE mb.membership_type = '" . $conn->real_escape_string($filter) . "'";
+        }
+
+        // Add grouping and ordering
+        $sql .= " GROUP BY m.member_ID ORDER BY last_checkin DESC LIMIT 5;";
+
+        $result = $conn->query($sql);
+
+
+          if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+              $status = ucfirst($row['membership_status']);
+              $last = $row['last_checkin'] ?? 'N/A';
+              $membership = $row['membership_type'] ?? 'N/A';
+              echo "<tr>
+                      <td>{$row['member_name']}</td>
+                      <td>{$membership}</td>
+                      <td class='status {$status}'>{$row['membership_status']}</td>
+                      <td>{$last}</td>
+                    </tr>";
+            }
+          } else {
+            echo "<tr><td colspan='4'>No recent members found.</td></tr>";
+          }
+
+          $conn->close();
+          ?>
+          </tbody>
+        </table>
       </div>
-    </div>
-  </div>
 
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Today's Check-ins</h5>
-      <h2 class="heading">25</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-user-check"></i>
-      </div>
-    </div>
-  </div>
+      <!-- Right Column -->
+      <div class="flexColumn">
+        <!-- ✅ UPDATED: Check-in Box -->
+        <div class="quickcontainer checkin-box">
+          <h4>Quick Check-in</h4>
+          <div class="checkin-input">
+            <input list="members" id="member-search" type="text" placeholder="Search member..." aria-label="Search member" />
+            <datalist id="members">
+              <?php
+              $conn = new mysqli("localhost", "root", "", "gym");
+              $res = $conn->query("SELECT member_name FROM members ORDER BY member_name ASC");
+              while ($row = $res->fetch_assoc()) {
+                echo "<option value=\"" . htmlspecialchars($row['member_name']) . "\">";
+              }
+              $conn->close();
+              ?>
+            </datalist>
+            <button id="checkin-btn" class="checkin-button">Check-in Member</button>
+          </div>
+        </div>
 
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Revenue (monthly)</h5>
-      <h2 class="heading">24,500</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-money-bill-wave"></i>
-      </div>
-    </div>
-  </div>
+        <div class="quickcontainer staff-schedule">
+          <h4>Top Active Members (month)</h4>
+          <ul class="top-members-list">
+            <?php
+            $conn = new mysqli("localhost", "root", "", "gym");
+            if ($conn->connect_error) {
+              echo "<li>Error loading top members.</li>";
+            } else {
+              $query = "
+                SELECT m.member_name, COUNT(a.attendance_ID) AS checkin_count
+                FROM attendance a
+                JOIN members m ON a.member_ID = m.member_ID
+                WHERE MONTH(a.attendance_date) = MONTH(CURDATE()) AND YEAR(a.attendance_date) = YEAR(CURDATE())
+                GROUP BY m.member_ID
+                ORDER BY checkin_count DESC
+                LIMIT 3
+              ";
 
-  <div class="quickcontainer two-column">
-    <div class="text-column">
-      <h5>Active Staff</h5>
-      <h2 class="heading">25</h2>
-    </div>
-    <div class="icon-column">
-      <div class="icon-circle">
-        <i class="fas fa-user-tie"></i>
+              $result = $conn->query($query);
+              if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                  $name = htmlspecialchars($row['member_name']);
+                  $count = $row['checkin_count'];
+                  echo "<li><span class='member-name'>{$name}</span><span class='activity-count'>{$count} check-ins</span></li>";
+                }
+              } else {
+                echo "<li><span class='member-name'>No check-ins this month.</span></li>";
+              }
+
+              $conn->close();
+            }
+            ?>
+          </ul>
+
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-
-      <div class="flexContainerBig">
-        <!-- Recent Members Card -->
-        <div class="quickcontainer recent-members">
-       <div class="header-row" style="display: flex; justify-content: space-between; align-items: center;">
-  <h4>Recent Members</h4>
-  <div style="position: relative;">
-    <button onclick="const dropdown = this.nextElementSibling; dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';"
-      style="background-color: white; color: black; padding: 8px 14px; font-size: 14px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
-      + Membership ▾
-    </button>
-    <div style="display: none; position: absolute; right: 0; background-color: white; color: black; box-shadow: 0px 2px 6px rgba(0,0,0,0.15); padding: 8px 0; min-width: 140px; border-radius: 5px; z-index: 1000;">
-      <button id="add-member-btn"
-      onclick="window.location.href='addmember.html';"   
-      style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
-        Add Member
-      </button>
-      <button id="walk-in-btn"
-      onclick="window.location.href='addmember.html';"  
-      style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
-        Walk-in
-      </button>
-      <button id="renewal-btn"
-      onclick="window.location.href='addmember.html';"   
-      style="background: none; border: none; padding: 10px 16px; width: 100%; text-align: left; color: black; cursor: pointer;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='white'">
-        Renewal
-      </button>
-    </div>
-  </div>
-          </div>
-          <table class="members-table" role="table" aria-label="Recent Members">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Membership</th>
-                <th scope="col">Status</th>
-                <th scope="col">Last Check-in</th>
-              </tr>
-            </thead>
-            <tbody>
-            <?php
-              // Database connection
-              $conn = new mysqli("localhost", "root", "", "gym");
-
-              if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-              }
-
-              // Get recent members with their last check-in
-              $sql = "
-                SELECT m.member_name, m.membership_status, mb.membership_type, MAX(a.attendance_date) AS last_checkin
-                FROM members m
-                LEFT JOIN subscribes s ON m.member_ID = s.member_ID
-                LEFT JOIN membership mb ON s.membership_ID = mb.membership_ID
-                LEFT JOIN attendance a ON m.member_ID = a.member_ID
-                GROUP BY m.member_ID
-                ORDER BY last_checkin DESC
-                LIMIT 5;
-              ";
-
-              $result = $conn->query($sql);
-
-              if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                  $statusClass = ucfirst($row['membership_status']);
-                  $lastCheckin = $row['last_checkin'] ? $row['last_checkin'] : 'N/A';
-                  $membership = $row['membership_type'] ?? 'N/A';
-
-                  echo "<tr>
-                          <td>{$row['member_name']}</td>
-                          <td>{$membership}</td>
-                          <td class='status {$statusClass}'>{$row['membership_status']}</td>
-                          <td>{$lastCheckin}</td>
-                        </tr>";
-                }
-              } else {
-                echo "<tr><td colspan='4'>No recent members found.</td></tr>";
-              }
-
-              $conn->close();
-            ?>
-          </tbody>
-          </table>
-        </div>
-
-        <div class="flexColumn">
-          <!-- Quick Check-in Card -->
-          <div class="quickcontainer checkin-box">
-            <h4>Quick Check-in</h4>
-            <div class="checkin-input">
-              <input id="member-search" type="text" placeholder="Search member..." aria-label="Search member" />
-              <button id="checkin-btn" class="checkin-button">Check-in Member</button>
-            </div>
-          </div>
-
-          <!-- Today's Staff Schedule Card -->
-          <div class="quickcontainer staff-schedule">
-            <h4>Top Active Members (month)</h4>
-            <ul class="top-members-list">
-              <li>
-                <span class="member-name">LeBron James</span>
-                <span class="activity-count">32 check-ins</span>
-              </li>
-              <li>
-                <span class="member-name">Anthony Davis</span>
-                <span class="activity-count">28 check-ins</span>
-              </li>
-              <li>
-                <span class="member-name">Austin Reaves</span>
-                <span class="activity-count">24 check-ins</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+<script src="checkin.js"></script>
+<script src="filtermembers.js"></script>
 </body>
 </html>
