@@ -72,7 +72,7 @@ if (!$stmt->execute()) {
 }
 $stmt->close();
 
-$staff_id = 1; /
+$staff_id = 1;
 $payment_type = 'cash'; 
 
 $insertPaymentSql = "INSERT INTO payment (member_ID, staff_ID, membership_ID, amount, payment_date, payment_type)
